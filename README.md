@@ -6,7 +6,7 @@ A Nagios Web Socket Monitoring Plugin
 
 A Nagios NRPE script that allows you to monitor a web socket server using
 the WAMP protocol. While it is fairly easy with Nagios to monitor whether
-or not your server proccess is running, but unfortunately that can't tell us
+or not your server proccess is running, unfortunately that can't tell us
 if that server is available and accepting connections.
 
 With nagios-wss you can actually open a connection to your websocket servers and
@@ -29,7 +29,7 @@ the directory where we want to keep our Nagios plugins, install the required lib
 and finally set proper permissions.
 
 	cd /path/to/where/you/want/it
-	git clone git@github.com:camronlevanger/nagios-stomp.git
+	git clone git@github.com:camronlevanger/nagios-wss.git
 	cd nagios-stomp
 	pip install -r requirements.txt
 	chmod +x check_wss_conn.py
