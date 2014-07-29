@@ -35,8 +35,8 @@ class NagiosMonitor(WampClientProtocol):
         global exit_message
         exit_code = 2
         exit_message = "CRITICAL - Unable to connect to socket server"
-        reactor.stop()    
-      
+        reactor.stop()
+
 
 if __name__ == '__main__':
 
