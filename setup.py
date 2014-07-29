@@ -48,10 +48,7 @@ setup(
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 2',
     ],
 
     # What does your project relate to?
@@ -67,25 +64,12 @@ setup(
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
     install_requires=['Twisted==13.2.0', 'autobahn==0.6.4', 'pyOpenSSL==0.13.1'],
 
-    # If there are data files included in your packages that need to be
-    # installed, specify them here.  If using Python 2.6 or less, then these
-    # have to be included in MANIFEST.in as well.
-    package_data={
-        'sample': ['package_data.dat'],
-    },
-
-    # Although 'package_data' is the preferred approach, in some case you may
-    # need to place data files outside of your packages.
-    # see http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
-    # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    data_files=[('my_data', ['data/data_file'])],
-
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'sample=sample:main',
+            'nagios_wss=check_wss_conn:main',
         ],
     },
 )
