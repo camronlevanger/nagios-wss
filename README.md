@@ -48,7 +48,7 @@ Now we need to edit our nrpe.cfg file and add our new plugin command.
 
 Now add the check_wss_conn command to the list.
 
-	 command[check_wss_conn]=/path/to/where/you/put/it/wss_nrpe_monitor.py
+	 command[check_wss_conn]=/path/to/where/you/put/it/check_wss_conn.py
 
 By default nagios-wss connects to wss://localhost:8080, if this works for your
 setup then the above command config is all that is needed. If that does not reflect
