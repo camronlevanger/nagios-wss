@@ -30,7 +30,7 @@ and finally set proper permissions.
 
 	cd /path/to/where/you/want/it
 	git clone git@github.com:camronlevanger/nagios-wss.git
-	cd nagios-stomp
+	cd nagios-wss
 	pip install -r requirements.txt
 	chmod +x check_wss_conn.py
 
