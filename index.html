@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>nagios-wss by camronlevanger</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>nagios-wss</h1>
+        <h2>A Nagios Web Socket Monitoring Plugin</h2>
+        <a href="https://github.com/camronlevanger/nagios-wss" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="nagios_wss" class="anchor" href="#nagios_wss"><span class="octicon octicon-link"></span></a>nagios_wss</h1>
+
+<h2>
+<a name="a-nagios-web-socket-monitoring-plugin" class="anchor" href="#a-nagios-web-socket-monitoring-plugin"><span class="octicon octicon-link"></span></a>A Nagios Web Socket Monitoring Plugin</h2>
+
+<p>A Nagios NRPE script that allows you to monitor a web socket server using
+the WAMP protocol. While it is fairly easy with Nagios to monitor whether
+or not your server proccess is running, unfortunately that can't tell us
+if that server is available and accepting connections.</p>
+
+<p>With nagios-wss you can actually open a connection to your websocket servers and
+have the confidence of knowing that they are responding correctly to your users.</p>
+
+<p>This script is designed to be run on Nagios client servers using the NRPE daemon.</p>
+
+<p>For more information on using Nagios and NRPE visit the following link:</p>
+
+<p><a href="http://nagios.sourceforge.net/docs/nrpe/">http://nagios.sourceforge.net/docs/nrpe/</a></p>
+
+<h2>
+<a name="installation-and-usage" class="anchor" href="#installation-and-usage"><span class="octicon octicon-link"></span></a>Installation and Usage</h2>
+
+<h3>
+<a name="download-and-install-nagios-wss" class="anchor" href="#download-and-install-nagios-wss"><span class="octicon octicon-link"></span></a>Download and Install nagios-wss</h3>
+
+<h4>
+<a name="clone-source-and-install-manually" class="anchor" href="#clone-source-and-install-manually"><span class="octicon octicon-link"></span></a>Clone Source and Install Manually</h4>
+
+<p>This is a pretty simple option for this small codebase. We will clone the  source into
+the directory where we want to keep our Nagios plugins, install the required libraries,
+and finally set proper permissions.</p>
+
+<pre><code>cd /path/to/where/you/want/it
+git clone git@github.com:camronlevanger/nagios-wss.git
+cd nagios-wss
+pip install -r requirements.txt
+chmod +x check_wss_conn.py
+</code></pre>
+
+<p>Then restart the NRPE service, on Ubuntu that looks like:</p>
+
+<pre><code>service nagios-nrpe-server restart
+</code></pre>
+
+<h4>
+<a name="install-using-pip" class="anchor" href="#install-using-pip"><span class="octicon octicon-link"></span></a>Install Using Pip</h4>
+
+<p>Coming Soon</p>
+
+<h3>
+<a name="add-nagios-wss-command-to-nrpe-client" class="anchor" href="#add-nagios-wss-command-to-nrpe-client"><span class="octicon octicon-link"></span></a>Add nagios-wss Command to NRPE Client</h3>
+
+<p>Now we need to edit our nrpe.cfg file and add our new plugin command.</p>
+
+<pre><code>vim /etc/nagios/nrpe.cfg
+</code></pre>
+
+<p>Now add the check_wss_conn command to the list.</p>
+
+<pre><code> command[check_wss_conn]=/path/to/where/you/put/it/check_wss_conn.py
+</code></pre>
+
+<p>By default nagios-wss connects to wss://localhost:8080, if this works for your
+setup then the above command config is all that is needed. If that does not reflect
+the location of the socket server you need to monitor, you can also pass in the
+host as an arg to the command.</p>
+
+<p>To pass args to the command make sure you set in nrpe.cfg</p>
+
+<pre><code>dont_blame_nrpe=1
+</code></pre>
+
+<p>And then the host arg is</p>
+
+<pre><code>-H host_uri
+</code></pre>
+
+<h3>
+<a name="add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server" class="anchor" href="#add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server"><span class="octicon octicon-link"></span></a>Add nagios-wss to Nagios Checks on Your Nagios Monitoring Server</h3>
+
+<p>Define a new service for nagios-wss</p>
+
+<pre><code>define service {
+    use generic-service (or your appropriate defined service)
+    host_name   name_of_your_client_host
+    service_description Web Socket Server Monitor
+    check_command   check_wss_conn
+}
+</code></pre>
+
+<p>Resart the Nagios host.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/camronlevanger/nagios-wss/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/camronlevanger/nagios-wss/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/camronlevanger/nagios-wss"></a> is maintained by <a href="https://github.com/camronlevanger">camronlevanger</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
