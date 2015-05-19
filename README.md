@@ -1,11 +1,12 @@
 nagios_wss
 ==========
 
-A Nagios Web Socket Monitoring Plugin
+A Nagios WAMP V2 Web Socket Monitoring Plugin
 -------------------------------------
+###If you need WAMP V1 monitoring checkout my older releases (v1.0.0)
 
 A Nagios NRPE script that allows you to monitor a web socket server using
-the WAMP protocol. While it is fairly easy with Nagios to monitor whether
+the *WAMP V2* protocol. While it is fairly easy with Nagios to monitor whether
 or not your server proccess is running, unfortunately that can't tell us
 if that server is available and accepting connections.
 
@@ -32,14 +33,13 @@ and finally set proper permissions.
 	git clone git@github.com:camronlevanger/nagios-wss.git
 	cd nagios-wss
 	pip install -r requirements.txt
-	chmod +x check_wss_conn.py
 
 Then restart the NRPE service, on Ubuntu that looks like:
 
 	service nagios-nrpe-server restart
 
 ####Install Using Pip
-Coming Soon
+Coming Soon(er or later)
 
 ###Add nagios-wss Command to NRPE Client
 Now we need to edit our nrpe.cfg file and add our new plugin command.
@@ -59,9 +59,11 @@ To pass args to the command make sure you set in nrpe.cfg
 
 	dont_blame_nrpe=1
 
-And then the host arg is
+###Important arguments:
 
-	-H host_uri
++ -H host_uri | The url you use to connect to the socket server - This defaults to wss://localhost:8080/ws
++ -R realm | The WAMP realm your server is listening on - defaults to realm1
++ -T topic | The name of the topic you want the monitor to attempt subscribing to - defaults to notifications.1
 
 ###Add nagios-wss to Nagios Checks on Your Nagios Monitoring Server
 Define a new service for nagios-wss
