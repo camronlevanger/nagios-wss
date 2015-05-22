@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
     <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <header>
       <div class="inner">
         <h1>nagios-wss</h1>
-        <h2>A Nagios Web Socket Monitoring Plugin</h2>
-        <a href="https://github.com/camronlevanger/nagios-wss" class="button"><small>View project on</small>GitHub</a>
+        <h2>A Nagios WAMP Router/Web Socket Monitoring Plugin</h2>
+        <a href="https://github.com/camronlevanger/nagios-wss" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
 
@@ -29,13 +29,16 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a name="nagios_wss" class="anchor" href="#nagios_wss"><span class="octicon octicon-link"></span></a>nagios_wss</h1>
+<a id="nagios_wss" class="anchor" href="#nagios_wss" aria-hidden="true"><span class="octicon octicon-link"></span></a>nagios_wss</h1>
 
 <h2>
-<a name="a-nagios-web-socket-monitoring-plugin" class="anchor" href="#a-nagios-web-socket-monitoring-plugin"><span class="octicon octicon-link"></span></a>A Nagios Web Socket Monitoring Plugin</h2>
+<a id="a-nagios-wamp-v1-and-v2-web-socket-monitoring-plugin" class="anchor" href="#a-nagios-wamp-v1-and-v2-web-socket-monitoring-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Nagios WAMP V1 and V2 Web Socket Monitoring Plugin</h2>
+
+<h3>
+<a id="now-supports-wamp-protocol-versions-1-and-2-check-out-the-releases-for-more-details" class="anchor" href="#now-supports-wamp-protocol-versions-1-and-2-check-out-the-releases-for-more-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now supports WAMP protocol versions 1 and 2. Check out the <a href="https://github.com/camronlevanger/nagios-wss/releases">releases</a> for more details.</h3>
 
 <p>A Nagios NRPE script that allows you to monitor a web socket server using
-the WAMP protocol. While it is fairly easy with Nagios to monitor whether
+the <em>WAMP V2</em> protocol. While it is fairly easy with Nagios to monitor whether
 or not your server proccess is running, unfortunately that can't tell us
 if that server is available and accepting connections.</p>
 
@@ -49,13 +52,13 @@ have the confidence of knowing that they are responding correctly to your users.
 <p><a href="http://nagios.sourceforge.net/docs/nrpe/">http://nagios.sourceforge.net/docs/nrpe/</a></p>
 
 <h2>
-<a name="installation-and-usage" class="anchor" href="#installation-and-usage"><span class="octicon octicon-link"></span></a>Installation and Usage</h2>
+<a id="installation-and-usage-wamp-v2-specific-for-v1-see-readmemd-in-the-v100-release" class="anchor" href="#installation-and-usage-wamp-v2-specific-for-v1-see-readmemd-in-the-v100-release" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation and Usage (WAMP V2 specific, for V1 see <a href="https://github.com/camronlevanger/nagios-wss/blob/v1.0.0/README.md">README.md in the v1.0.0 release</a>)</h2>
 
 <h3>
-<a name="download-and-install-nagios-wss" class="anchor" href="#download-and-install-nagios-wss"><span class="octicon octicon-link"></span></a>Download and Install nagios-wss</h3>
+<a id="download-and-install-nagios-wss" class="anchor" href="#download-and-install-nagios-wss" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download and Install nagios-wss</h3>
 
 <h4>
-<a name="clone-source-and-install-manually" class="anchor" href="#clone-source-and-install-manually"><span class="octicon octicon-link"></span></a>Clone Source and Install Manually</h4>
+<a id="clone-source-and-install-manually" class="anchor" href="#clone-source-and-install-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Clone Source and Install Manually</h4>
 
 <p>This is a pretty simple option for this small codebase. We will clone the  source into
 the directory where we want to keep our Nagios plugins, install the required libraries,
@@ -65,7 +68,6 @@ and finally set proper permissions.</p>
 git clone git@github.com:camronlevanger/nagios-wss.git
 cd nagios-wss
 pip install -r requirements.txt
-chmod +x check_wss_conn.py
 </code></pre>
 
 <p>Then restart the NRPE service, on Ubuntu that looks like:</p>
@@ -74,12 +76,12 @@ chmod +x check_wss_conn.py
 </code></pre>
 
 <h4>
-<a name="install-using-pip" class="anchor" href="#install-using-pip"><span class="octicon octicon-link"></span></a>Install Using Pip</h4>
+<a id="install-using-pip" class="anchor" href="#install-using-pip" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Using Pip</h4>
 
-<p>Coming Soon</p>
+<p>Coming Soon(er or later)</p>
 
 <h3>
-<a name="add-nagios-wss-command-to-nrpe-client" class="anchor" href="#add-nagios-wss-command-to-nrpe-client"><span class="octicon octicon-link"></span></a>Add nagios-wss Command to NRPE Client</h3>
+<a id="add-nagios-wss-command-to-nrpe-client" class="anchor" href="#add-nagios-wss-command-to-nrpe-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add nagios-wss Command to NRPE Client</h3>
 
 <p>Now we need to edit our nrpe.cfg file and add our new plugin command.</p>
 
@@ -101,13 +103,17 @@ host as an arg to the command.</p>
 <pre><code>dont_blame_nrpe=1
 </code></pre>
 
-<p>And then the host arg is</p>
+<h3>
+<a id="important-arguments" class="anchor" href="#important-arguments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Important arguments:</h3>
 
-<pre><code>-H host_uri
-</code></pre>
+<ul>
+<li>-H host_uri | The url you use to connect to the socket server - This defaults to wss://localhost:8080/ws</li>
+<li>-R realm | The WAMP realm your server is listening on - defaults to realm1</li>
+<li>-T topic | The name of the topic you want the monitor to attempt subscribing to - defaults to notifications.1</li>
+</ul>
 
 <h3>
-<a name="add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server" class="anchor" href="#add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server"><span class="octicon octicon-link"></span></a>Add nagios-wss to Nagios Checks on Your Nagios Monitoring Server</h3>
+<a id="add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server" class="anchor" href="#add-nagios-wss-to-nagios-checks-on-your-nagios-monitoring-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add nagios-wss to Nagios Checks on Your Nagios Monitoring Server</h3>
 
 <p>Define a new service for nagios-wss</p>
 
