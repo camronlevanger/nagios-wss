@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import json
 import sys
 import argparse
 from twisted.python import log
@@ -39,6 +40,16 @@ class Component(ApplicationSession):
             exit_code = 1
             exit_message = 'Warning - Connected, but no subscription made'
 
+        try:
+            message = json.loads('{"hello": "world", "test": "publish"}')
+            yield self.publish(
+                topic,
+                json.dumps(message)
+            )
+        except Exception as e:
+            exit_code = 1
+            exit_message = 'Unable to publish to WAMP router! ' + str(e)
+
     def onLeave(self, details):
         """
         There is a bug in authobahn.wamp.protocol.py that always calls
@@ -63,7 +74,7 @@ if __name__ == '__main__':
 
     host = 'wss://localhost:8080/ws'
     if args.host is not None:
-        host = args.host
+        host = str(args.host)
 
     realm = 'realm1'
     if args.realm is not None:
