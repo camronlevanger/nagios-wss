@@ -55,16 +55,6 @@ class Component(ApplicationSession):
             exit_code = EXIT_CODE_CRITICAL
             exit_message = 'CRITICAL - Connected, but no subscription made'
 
-        try:
-            message = json.loads('{"hello": "world", "test": "publish"}')
-            yield self.publish(
-                topic,
-                json.dumps(message)
-            )
-        except Exception as e:
-            exit_code = EXIT_CODE_CRITICAL
-            exit_message = 'Unable to publish to WAMP router! ' + str(e)
-
     def onLeave(self, details):
         """
         There is a bug in authobahn.wamp.protocol.py that always calls
@@ -108,6 +98,7 @@ if __name__ == '__main__':
         timeout = args.timeout
 
     def timeoutError():
+        print "Timed out!"
         reactor.stop() # This causes the runner.run() function to return.
 
     timeoutTimer = threading.Timer(timeout, timeoutError)
