@@ -23,17 +23,6 @@ exit_message = 'UNKNOWN - Unable to get info for socket connections'
 topic = 'notifications.1'
 
 
-def timeoutError():
-    receiveMessageEvent.clear()
-    # exit_code = EXIT_CODE_CRITICAL
-    # exit_message = "CRITICAL - process timed out before a message was received"
-    # print exit_message
-    # sys.exit(exit_code)
-
-
-receiveMessageEvent = threading.Event()
-
-
 class Component(ApplicationSession):
 
     """
@@ -46,31 +35,23 @@ class Component(ApplicationSession):
         global exit_code
         global exit_message
         global topic
-        exit_code = EXIT_CODE_WARNING
-        exit_message = 'Warning - Connected, but no subscription made'
+        exit_code = EXIT_CODE_CRITICAL
+        exit_message = 'CRITICAL - Connected, but no messages received'
 
         def onEvent(msg, options=None):
             global exit_code
             global exit_message
-            global topic
+
             print("Got event: {}".format(msg))
 
             exit_code = EXIT_CODE_NORMAL
             exit_message = 'OK - Socket session fully established'
-            reactor.stop()
-            receiveMessageEvent.set()
+            reactor.stop() # We can exit now.
 
         try:
             yield self.subscribe(onEvent, topic)
             print "Subscribed, waiting for event..."
-
-            # exit_code = EXIT_CODE_NORMAL
-            # exit_message = 'OK - Socket session fully established'
-            # reactor.stop()
-            # receiveMessageEvent.set()
-
         except Exception:
-            print "exception in onEvent!"
             exit_code = EXIT_CODE_CRITICAL
             exit_message = 'CRITICAL - Connected, but no subscription made'
 
@@ -122,9 +103,12 @@ if __name__ == '__main__':
     if args.debug is not None:
         debug = args.debug
 
-    timeout = 3 # TODO: Change to 7 minutes
+    timeout = 7 * 60 # 7 minutes
     if args.timeout is not None:
         timeout = args.timeout
+
+    def timeoutError():
+        reactor.stop() # This causes the runner.run() function to return.
 
     timeoutTimer = threading.Timer(timeout, timeoutError)
     timeoutTimer.start()
@@ -136,14 +120,12 @@ if __name__ == '__main__':
         from autobahn.twisted.wamp import ApplicationRunner
         runner = ApplicationRunner(host, realm)
         runner.run(Component)
+
     except KeyboardInterrupt:
         print "Shutdown requested...exiting"
     except Exception:
         exit_code = EXIT_CODE_CRITICAL
         exit_message = "CRITICAL - Unable to connect to socket server"
-
-    while not receiveMessageEvent.wait(timeout=2.0): # every 2 seconds, see if we've received an event yet
-        "Message hasn't been received yet..."
 
     timeoutTimer.cancel()
     print exit_message
