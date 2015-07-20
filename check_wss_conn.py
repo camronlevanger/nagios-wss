@@ -25,13 +25,11 @@ topic = 'notifications.1'
 
 def timeoutError():
     receiveMessageEvent.clear()
-    exit_code = EXIT_CODE_CRITICAL
-    exit_message = "CRITICAL - process timed out before a message was received"
-    print exit_message
-    sys.exit(exit_code)
+    # exit_code = EXIT_CODE_CRITICAL
+    # exit_message = "CRITICAL - process timed out before a message was received"
+    # print exit_message
+    # sys.exit(exit_code)
 
-timeoutTimer = threading.Timer(10.0, timeoutError)
-timeoutTimer.start()
 
 receiveMessageEvent = threading.Event()
 
@@ -51,25 +49,25 @@ class Component(ApplicationSession):
         exit_code = EXIT_CODE_WARNING
         exit_message = 'Warning - Connected, but no subscription made'
 
-        def onEvent(msg):
-            # global exit_code
-            # global exit_message
-            # global topic
+        def onEvent(msg, options=None):
+            global exit_code
+            global exit_message
+            global topic
             print("Got event: {}".format(msg))
-
-            # exit_code = EXIT_CODE_NORMAL
-            # exit_message = 'OK - Socket session fully established'
-            # reactor.stop()
-            # receiveMessageEvent.set()
-
-        try:
-            yield self.subscribe(onEvent, topic)
-            print "Subscribed, waiting for event..."
 
             exit_code = EXIT_CODE_NORMAL
             exit_message = 'OK - Socket session fully established'
             reactor.stop()
             receiveMessageEvent.set()
+
+        try:
+            yield self.subscribe(onEvent, topic)
+            print "Subscribed, waiting for event..."
+
+            # exit_code = EXIT_CODE_NORMAL
+            # exit_message = 'OK - Socket session fully established'
+            # reactor.stop()
+            # receiveMessageEvent.set()
 
         except Exception:
             print "exception in onEvent!"
@@ -128,6 +126,9 @@ if __name__ == '__main__':
     if args.timeout is not None:
         timeout = args.timeout
 
+    timeoutTimer = threading.Timer(timeout, timeoutError)
+    timeoutTimer.start()
+
     try:
         if debug:
             log.startLogging(sys.stdout)
@@ -142,7 +143,7 @@ if __name__ == '__main__':
         exit_message = "CRITICAL - Unable to connect to socket server"
 
     while not receiveMessageEvent.wait(timeout=2.0): # every 2 seconds, see if we've received an event yet
-        print "Message hasn't been received yet..."
+        "Message hasn't been received yet..."
 
     timeoutTimer.cancel()
     print exit_message
