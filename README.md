@@ -7,7 +7,7 @@ A Nagios WAMP V2 Web Socket Monitoring Plugin
 
 A Nagios NRPE script that allows you to monitor a web socket server using
 the *WAMP V2* protocol. While it is fairly easy with Nagios to monitor whether
-or not your server proccess is running, unfortunately that can't tell us
+or not your server process is running, unfortunately that can't tell us
 if that server is available and accepting connections.
 
 With nagios-wss you can actually open a connection to your websocket servers and
@@ -75,4 +75,4 @@ Define a new service for nagios-wss
 		check_command	check_wss_conn
 	}
 
-Resart the Nagios host.
+Restart the Nagios host.
