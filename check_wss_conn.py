@@ -2,15 +2,38 @@
 import json
 import sys
 import argparse
+import threading
 from twisted.python import log
 from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks
 
 from autobahn.twisted.wamp import ApplicationSession
 
-exit_code = 3
+"""
+Setup constants
+"""
+EXIT_CODE_NORMAL = 0
+EXIT_CODE_WARNING = 1
+EXIT_CODE_CRITICAL = 2
+EXIT_CODE_UNKNOWN = 3
+
+
+exit_code = EXIT_CODE_UNKNOWN
 exit_message = 'UNKNOWN - Unable to get info for socket connections'
 topic = 'notifications.1'
+
+
+def timeoutError():
+    receiveMessageEvent.clear()
+    exit_code = EXIT_CODE_CRITICAL
+    exit_message = "CRITICAL - process timed out before a message was received"
+    print exit_message
+    sys.exit(exit_code)
+
+timeoutTimer = threading.Timer(10.0, timeoutError)
+timeoutTimer.start()
+
+receiveMessageEvent = threading.Event()
 
 
 class Component(ApplicationSession):
@@ -25,20 +48,33 @@ class Component(ApplicationSession):
         global exit_code
         global exit_message
         global topic
-        exit_code = 1
+        exit_code = EXIT_CODE_WARNING
         exit_message = 'Warning - Connected, but no subscription made'
 
-        def on_event(msg):
+        def onEvent(msg):
+            # global exit_code
+            # global exit_message
+            # global topic
             print("Got event: {}".format(msg))
 
+            # exit_code = EXIT_CODE_NORMAL
+            # exit_message = 'OK - Socket session fully established'
+            # reactor.stop()
+            # receiveMessageEvent.set()
+
         try:
-            yield self.subscribe(on_event, topic)
-            exit_code = 0
+            yield self.subscribe(onEvent, topic)
+            print "Subscribed, waiting for event..."
+
+            exit_code = EXIT_CODE_NORMAL
             exit_message = 'OK - Socket session fully established'
             reactor.stop()
+            receiveMessageEvent.set()
+
         except Exception:
-            exit_code = 1
-            exit_message = 'Warning - Connected, but no subscription made'
+            print "exception in onEvent!"
+            exit_code = EXIT_CODE_CRITICAL
+            exit_message = 'CRITICAL - Connected, but no subscription made'
 
         try:
             message = json.loads('{"hello": "world", "test": "publish"}')
@@ -47,7 +83,7 @@ class Component(ApplicationSession):
                 json.dumps(message)
             )
         except Exception as e:
-            exit_code = 1
+            exit_code = EXIT_CODE_CRITICAL
             exit_message = 'Unable to publish to WAMP router! ' + str(e)
 
     def onLeave(self, details):
@@ -63,7 +99,7 @@ class Component(ApplicationSession):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='A Nagios plugin to monitor WAMP servers'
-        )
+    )
 
     parser.add_argument('-H', '--host')
     parser.add_argument('-R', '--realm')
@@ -88,7 +124,7 @@ if __name__ == '__main__':
     if args.debug is not None:
         debug = args.debug
 
-    timeout = 30
+    timeout = 3 # TODO: Change to 7 minutes
     if args.timeout is not None:
         timeout = args.timeout
 
@@ -102,8 +138,12 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print "Shutdown requested...exiting"
     except Exception:
-        exit_code = 2
+        exit_code = EXIT_CODE_CRITICAL
         exit_message = "CRITICAL - Unable to connect to socket server"
 
+    while not receiveMessageEvent.wait(timeout=2.0): # every 2 seconds, see if we've received an event yet
+        print "Message hasn't been received yet..."
+
+    timeoutTimer.cancel()
     print exit_message
     sys.exit(exit_code)
